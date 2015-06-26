@@ -1,0 +1,45 @@
+{% comment %}
+  Set some default values
+{% endcomment %}
+{% if default_size == nil %}
+  {% assign default_size = "medium" %}
+{% endif %}
+
+{% if sizes == nil %}
+  {% assign sizes = "100vw" %}
+{% endif %}
+
+{% if image == nil %}
+  {% assign image = product.featured_image %}
+{% endif %}
+
+{% comment %}
+  UGLY HACK ALERT:
+  If our images are portrait rather than landscape, then we have problems
+  because Shopify doesnt tell us their widths. So we have to take a guess.
+  If you know the aspect ratio of your shop's images, then pass it in as
+  a decimal (width/height) when including this snippet, otherwise we just
+  use a common portrait aspect ratio (3:4) as the default.
+{% endcomment %}
+{% if is_portrait == true %}
+  {% if aspect_ratio == nil %}
+    {% assign scale = 0.75 %}
+  {% else %}
+    {% assign scale = aspect_ratio %}
+  {% endif %}
+{% else %}
+  {% assign scale = 1 %}
+{% endif %}
+
+<img src="{{ image.src | product_img_url: default_size }}"
+  srcset="
+    {{ image.src | product_img_url: 'small' }}     {{ 100 | times: scale | round }}w,
+    {{ image.src | product_img_url: 'compact' }}  {{ 160 | times: scale | round }}w,
+    {{ image.src | product_img_url: 'medium' }}   {{ 240 | times: scale | round }}w,
+    {{ image.src | product_img_url: 'large' }}     {{ 480 | times: scale | round }}w,
+    {{ image.src | product_img_url: 'grande' }}    {{ 600 | times: scale | round }}w,
+    {{ image.src | product_img_url: '1024x1024' }} {{ 1024 | times: scale | round }}w
+  "
+  sizes="{{ sizes }}"
+  alt="{{ image.alt | escape }}"
+/>
