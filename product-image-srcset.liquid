@@ -1,45 +1,72 @@
 {% comment %}
-  Set some default values
+Shopify responsive product images with srcset
+
+Example:
+
+  Include this snippet on a product page or within a products loop:
+
+  {% include 'product-image-srcset',
+      sizes: '(max-width: 640px) 50vw, (min-width: 641px) and (max-width: 960px) 33vw, 25vw' %}
+
+Options:
+
+  sizes         - Media queries describing how large the image will be at various screen sizes.
+                  REQUIRED
+                  Default: '50vw' (the image will occupy 50% of the viewport width)
+
+  image         - Product image to display
+                  OPTIONAL
+                  Default: product.featured_image
+
+  default_size  - Shopify image size to load as default <img> src
+                  OPTIONAL
+                  Default: 'medium'
+
+  is_portrait   - If the image is portrait rather than landscape, set this option
+                  to true or srcset calculations will be incorrect.
+                  OPTIONAL
+                  Default: nil
+
+  aspect_ratio  - If is_portrait = true, then you should specify the aspect ratio of
+                  the image, in decimal form. i.e. 4:3 == 0.75 (width/height)
+                  OPTIONAL
+                  Default: 0.75
+
+  attributes    - String of additional HTML attributes for the <img> tag
+                  OPTIONAL
+                  Default: ""
+
+
 {% endcomment %}
-{% if default_size == nil %}
-  {% assign default_size = "medium" %}
-{% endif %}
 
-{% if sizes == nil %}
-  {% assign sizes = "100vw" %}
-{% endif %}
+{% assign default_default_size = "medium" %}
+{% assign default_sizes = "50vw" %}
+{% assign default_image = product.featured_image %}
+{% assign default_portrait_scale = 0.75 %}
 
-{% if image == nil %}
-  {% assign image = product.featured_image %}
-{% endif %}
+{% if default_default_size != nil %}{% assign image_size = default_default_size %}{% endif %}
+{% if default_sizes != nil %}{% assign sizes = default_sizes %}{% endif %}
+{% if default_image != nil %}{% assign product_image = default_image %}{% endif %}
 
-{% comment %}
-  UGLY HACK ALERT:
-  If our images are portrait rather than landscape, then we have problems
-  because Shopify doesnt tell us their widths. So we have to take a guess.
-  If you know the aspect ratio of your shop's images, then pass it in as
-  a decimal (width/height) when including this snippet, otherwise we just
-  use a common portrait aspect ratio (3:4) as the default.
-{% endcomment %}
 {% if is_portrait == true %}
-  {% if aspect_ratio == nil %}
-    {% assign scale = 0.75 %}
-  {% else %}
+  {% if aspect_ratio != nil %}
     {% assign scale = aspect_ratio %}
+  {% else %}
+    {% assign scale = default_portrait_scale %}
   {% endif %}
 {% else %}
   {% assign scale = 1 %}
 {% endif %}
 
-<img src="{{ image.src | product_img_url: default_size }}"
+<img src="{{ image.src | product_img_url: image_size }}"
   srcset="
-    {{ image.src | product_img_url: 'small' }}     {{ 100 | times: scale | round }}w,
-    {{ image.src | product_img_url: 'compact' }}  {{ 160 | times: scale | round }}w,
-    {{ image.src | product_img_url: 'medium' }}   {{ 240 | times: scale | round }}w,
-    {{ image.src | product_img_url: 'large' }}     {{ 480 | times: scale | round }}w,
-    {{ image.src | product_img_url: 'grande' }}    {{ 600 | times: scale | round }}w,
-    {{ image.src | product_img_url: '1024x1024' }} {{ 1024 | times: scale | round }}w
-  "
+    {{ image.src | product_img_url: 'small' }}     {{ 100  | times: scale | round }}w,
+    {{ image.src | product_img_url: 'compact' }}   {{ 160  | times: scale | round }}w,
+    {{ image.src | product_img_url: 'medium' }}    {{ 240  | times: scale | round }}w,
+    {{ image.src | product_img_url: 'large' }}     {{ 480  | times: scale | round }}w,
+    {{ image.src | product_img_url: 'grande' }}    {{ 600  | times: scale | round }}w,
+    {{ image.src | product_img_url: '1024x1024' }} {{ 1024 | times: scale | round }}w"
   sizes="{{ sizes }}"
   alt="{{ image.alt | escape }}"
+  {% if attributes != nil %}{{ attributes }}{% endif %}
 />
