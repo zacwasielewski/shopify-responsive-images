@@ -55,10 +55,9 @@ More information about srcset and sizes:
 {% if image == nil %}{% assign image = default_image %}{% endif %}
 
 {% comment %}
-Shopify doesn't provide an image's width, only the length of its the longest
-edge. So for srcset to behave accurately with portrait-oriented images, we
-need to run a bit of Javascript to scale the srcset values to match the
-actual image width.
+srcset needs to know the width of each image to work accurately, but Shopify
+only tell us the length of its longest side. So we need to run this bit of
+Javascript on each image to determine its width and update the srcset attribute.
 {% endcomment %}
 <script>
   if (typeof Shopify === 'undefined') { Shopify = {}; }
@@ -68,6 +67,8 @@ actual image width.
           srcset = "",
           is_portrait = (img.height > img.width),
           scale = is_portrait ? img.width / img.height : 1;
+
+      if (!is_portrait) { return; }
 
       srcset = srcset_json.map(function(rule) {
         var url = rule[0],
