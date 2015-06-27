@@ -54,6 +54,8 @@ More information about srcset and sizes:
 {% if sizes == nil %}{% assign sizes = default_sizes %}{% endif %}
 {% if image == nil %}{% assign image = default_image %}{% endif %}
 
+{% assign image_id = image.src | handleize | replace: "-", "_" %}
+
 {% comment %}
 srcset needs to know the width of each image to work accurately, but Shopify
 only tell us the length of its longest side. So we need to run this bit of
@@ -63,12 +65,19 @@ Javascript on each image to determine its width and update the srcset attribute.
   if (typeof Shopify === 'undefined') { Shopify = {}; }
   if (typeof Shopify.scaleSrcset === 'undefined') {
     Shopify.scaleSrcset = function(img) {
-      var srcset_json = JSON.parse(img.getAttribute('data-srcset-json')),
+      var srcset_json,
           srcset = "",
-          is_portrait = (img.height > img.width),
-          scale = is_portrait ? img.width / img.height : 1;
+          is_portrait = (img.naturalHeight > img.naturalWidth),
+          scale = is_portrait ? img.naturalWidth / img.naturalHeight : 1;
 
+      if (img.getAttribute('data-srcset-scaled')) { return; }
       if (!is_portrait) { return; }
+
+      srcset_json = JSON.parse(img.getAttribute('data-srcset-json'));
+      //srcset = img.getAttribute('srcset') || (img.picturefill || {}).srcset;
+      //srcset_json = srcset.split(',').map(function(rule){
+      //  return rule.trim().split(/\s+/).map(function(s) { return s.trim(); });
+      //});
 
       srcset = srcset_json.map(function(rule) {
         var url = rule[0],
@@ -78,6 +87,7 @@ Javascript on each image to determine its width and update the srcset attribute.
       }).join(',');
 
       img.setAttribute('srcset', srcset);
+      img.setAttribute('data-srcset-scaled', true); // make sure we only scale this once
     }
   }
 </script>
@@ -100,4 +110,13 @@ Javascript on each image to determine its width and update the srcset attribute.
   alt="{{ image.alt | escape }}"
   onload="Shopify.scaleSrcset(this)"
   {% if attributes != nil %}{{ attributes }}{% endif %}
+  id="{{ image_id }}"
 />
+<!--
+<script>
+var img = document.getElementById('{{ image_id }}');
+console.log( img );
+console.log( img.width );
+console.log( img.naturalHeight );
+</script>
+-->
