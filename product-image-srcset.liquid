@@ -36,16 +36,6 @@ Options:
                   OPTIONAL
                   Default: 'medium'
 
-  is_portrait   - If the image is portrait rather than landscape, set this option
-                  to true or srcset calculations will be incorrect.
-                  OPTIONAL
-                  Default: nil
-
-  aspect_ratio  - If is_portrait = true, then you should specify the aspect ratio of
-                  the image, in decimal form. i.e. 4:3 == 0.75 (width/height)
-                  OPTIONAL
-                  Default: 0.75
-
   attributes    - String of additional HTML attributes for the <img> tag
                   OPTIONAL
                   Default: ""
@@ -59,30 +49,25 @@ More information about srcset and sizes:
 {% assign default_default_size = "medium" %}
 {% assign default_sizes = "50vw" %}
 {% assign default_image = product.featured_image %}
-{% assign default_portrait_scale = 0.75 %}
 
-{% if default_default_size != nil %}{% assign image_size = default_default_size %}{% endif %}
-{% if default_sizes != nil %}{% assign sizes = default_sizes %}{% endif %}
-{% if default_image != nil %}{% assign product_image = default_image %}{% endif %}
+{% if default_size == nil %}{% assign default_size = default_default_size %}{% endif %}
+{% if sizes == nil %}{% assign sizes = default_sizes %}{% endif %}
+{% if image == nil %}{% assign image = default_image %}{% endif %}
 
-{% if is_portrait == true %}
-  {% if aspect_ratio != nil %}
-    {% assign scale = aspect_ratio %}
-  {% else %}
-    {% assign scale = default_portrait_scale %}
-  {% endif %}
-{% else %}
-  {% assign scale = 1 %}
-{% endif %}
-
+{% comment %}
+Shopify doesn't provide an image's width, only the length of its the longest
+edge. So for srcset to behave accurately with portrait-oriented images, we
+need to run a bit of Javascript to scale the srcset values to match the
+actual image width.
+{% endcomment %}
 <script>
   if (typeof Shopify === 'undefined') { Shopify = {}; }
-  if (typeof Shopify.generateSrcset === 'undefined') {
-    Shopify.generateSrcset = function(img) {
+  if (typeof Shopify.scaleSrcset === 'undefined') {
+    Shopify.scaleSrcset = function(img) {
       var srcset_json = JSON.parse(img.getAttribute('data-srcset-json')),
           srcset = "",
           is_portrait = (img.height > img.width),
-          scale = (is_portrait) ? img.width / img.height : 1;
+          scale = is_portrait ? img.width / img.height : 1;
 
       srcset = srcset_json.map(function(rule) {
         var url = rule[0],
@@ -95,14 +80,14 @@ More information about srcset and sizes:
     }
   }
 </script>
-<img src="{{ image.src | product_img_url: image_size }}"
+<img src="{{ image.src | product_img_url: default_size }}"
   srcset="
-    {{ image.src | product_img_url: 'small' }}     {{ 100  | times: scale | round }}w,
-    {{ image.src | product_img_url: 'compact' }}   {{ 160  | times: scale | round }}w,
-    {{ image.src | product_img_url: 'medium' }}    {{ 240  | times: scale | round }}w,
-    {{ image.src | product_img_url: 'large' }}     {{ 480  | times: scale | round }}w,
-    {{ image.src | product_img_url: 'grande' }}    {{ 600  | times: scale | round }}w,
-    {{ image.src | product_img_url: '1024x1024' }} {{ 1024 | times: scale | round }}w"
+    {{ image.src | product_img_url: 'small' }}     100w,
+    {{ image.src | product_img_url: 'compact' }}   160w,
+    {{ image.src | product_img_url: 'medium' }}    240w,
+    {{ image.src | product_img_url: 'large' }}     480w,
+    {{ image.src | product_img_url: 'grande' }}    600w,
+    {{ image.src | product_img_url: '1024x1024' }} 1024w"
   data-srcset-json="[
     [&quot;{{ image.src | product_img_url: 'small' }}&quot;,     &quot;100w&quot;],
     [&quot;{{ image.src | product_img_url: 'compact' }}&quot;,   &quot;160w&quot;],
@@ -112,6 +97,6 @@ More information about srcset and sizes:
     [&quot;{{ image.src | product_img_url: '1024x1024' }}&quot;, &quot;1024w&quot;]]"
   sizes="{{ sizes }}"
   alt="{{ image.alt | escape }}"
-  onload="Shopify.generateSrcset(this)"
+  onload="Shopify.scaleSrcset(this)"
   {% if attributes != nil %}{{ attributes }}{% endif %}
 />
