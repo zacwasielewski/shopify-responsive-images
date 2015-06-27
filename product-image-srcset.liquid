@@ -75,6 +75,26 @@ More information about srcset and sizes:
   {% assign scale = 1 %}
 {% endif %}
 
+<script>
+  if (typeof Shopify === 'undefined') { Shopify = {}; }
+  if (typeof Shopify.generateSrcset === 'undefined') {
+    Shopify.generateSrcset = function(img) {
+      var srcset_json = JSON.parse(img.getAttribute('data-srcset-json')),
+          srcset = "",
+          is_portrait = (img.height > img.width),
+          scale = (is_portrait) ? img.width / img.height : 1;
+
+      srcset = srcset_json.map(function(rule) {
+        var url = rule[0],
+            width = parseInt(rule[1].slice(0,-1));
+        if (width > 160) { width = Math.floor(width * scale); }
+        return [url, width+"w"].join(" ");
+      }).join(',');
+
+      img.setAttribute('srcset', srcset);
+    }
+  }
+</script>
 <img src="{{ image.src | product_img_url: image_size }}"
   srcset="
     {{ image.src | product_img_url: 'small' }}     {{ 100  | times: scale | round }}w,
@@ -83,7 +103,15 @@ More information about srcset and sizes:
     {{ image.src | product_img_url: 'large' }}     {{ 480  | times: scale | round }}w,
     {{ image.src | product_img_url: 'grande' }}    {{ 600  | times: scale | round }}w,
     {{ image.src | product_img_url: '1024x1024' }} {{ 1024 | times: scale | round }}w"
+  data-srcset-json="[
+    [&quot;{{ image.src | product_img_url: 'small' }}&quot;,     &quot;100w&quot;],
+    [&quot;{{ image.src | product_img_url: 'compact' }}&quot;,   &quot;160w&quot;],
+    [&quot;{{ image.src | product_img_url: 'medium' }}&quot;,    &quot;240w&quot;],
+    [&quot;{{ image.src | product_img_url: 'large' }}&quot;,     &quot;480w&quot;],
+    [&quot;{{ image.src | product_img_url: 'grande' }}&quot;,    &quot;600w&quot;],
+    [&quot;{{ image.src | product_img_url: '1024x1024' }}&quot;, &quot;1024w&quot;]]"
   sizes="{{ sizes }}"
   alt="{{ image.alt | escape }}"
+  onload="Shopify.generateSrcset(this)"
   {% if attributes != nil %}{{ attributes }}{% endif %}
 />
