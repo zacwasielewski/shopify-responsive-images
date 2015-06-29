@@ -1,28 +1,32 @@
 Responsive Shopify images with `srcset` and `sizes`
 ===
 
-Drop these Liquid snippets into your Shopify theme to make product and collection images responsive.
+Use this Liquid snippet in your Shopify theme to make product images responsive.
 
 Quick start
 ---
 
-Copy `product-image-srcset.liquid` to your theme's `snippets` folder and include it wherever you would normally include a product image:
+Copy `responsive-product-image.liquid` to your theme's `snippets` folder and include it wherever you would normally include a product image:
 
-    {% include 'product-image-srcset' %}
+```liquid
+{% include 'product-image-srcset' %}
+```
 
 That will output:
 
-    <img src="//cdn.shopify.com/.../products/IMG_medium.jpg"
-      srcset="
-        //cdn.shopify.com/.../products/IMG_small.jpg     100w,
-        //cdn.shopify.com/.../products/IMG_compact.jpg   160w,
-        //cdn.shopify.com/.../products/IMG_medium.jpg    240w,
-        //cdn.shopify.com/.../products/IMG_large.jpg     480w,
-        //cdn.shopify.com/.../products/IMG_grande.jpg    600w,
-        //cdn.shopify.com/.../products/IMG_1024x1024.jpg 1024w"
-      sizes="100vw"
-      alt="Product title"
-    />
+```html
+<img src="//cdn.shopify.com/.../products/IMG_medium.jpg"
+  srcset="
+    //cdn.shopify.com/.../products/IMG_small.jpg     100w,
+    //cdn.shopify.com/.../products/IMG_compact.jpg   160w,
+    //cdn.shopify.com/.../products/IMG_medium.jpg    240w,
+    //cdn.shopify.com/.../products/IMG_large.jpg     480w,
+    //cdn.shopify.com/.../products/IMG_grande.jpg    600w,
+    //cdn.shopify.com/.../products/IMG_1024x1024.jpg 1024w"
+  sizes="100vw"
+  alt="Product title"
+/>
+```
 
 Advanced usage
 ---
@@ -39,8 +43,10 @@ For example, let's assume your Shopify theme displays a typical responsive produ
 
 You would give the `sizes` option this list of media queries (`vw` stands for viewport width):
 
-    {% include 'product-image-srcset',
-       sizes: '(max-width: 480px) 100vw, (min-width: 481px) and (max-width: 768px) 50vw, 25vw'%}
+```liquid
+{% include 'product-image-srcset',
+  sizes: '(max-width: 480px) 100vw, (min-width: 481px) and (max-width: 768px) 50vw, 25vw'%}
+```
 
 More about `srcset` and `sizes`:
   - https://dev.opera.com/articles/native-responsive-images/
