@@ -37,10 +37,13 @@ Assuming you have a typical responsive product grid which changes its layout dep
 |Tablet (> 480px and <= 768px)|2|50%|
 |Desktop (> 768px)|4|25%|
 
-You would give the `sizes` option a list of media queries (`vw` stands for viewport width):
+You would give the `sizes` option this list of media queries (`vw` stands for viewport width):
 
     {% include 'product-image-srcset',
        sizes: '(max-width: 480px) 100vw, (min-width: 481px) and (max-width: 768px) 50vw, 25vw'%}
+
+More about `srcset` and `sizes`:
+  - https://dev.opera.com/articles/native-responsive-images/
 
 FAQ
 ---
