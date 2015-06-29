@@ -1,7 +1,7 @@
-Responsive Shopify images with the `srcset` attribute
+Responsive Shopify images with `srcset` and `sizes`
 ===
 
-Drop these Liquid snippets into your Shopify theme to generate responsive product and collection images.
+Drop these Liquid snippets into your Shopify theme to make product and collection images responsive.
 
 Quick start
 ---
@@ -29,10 +29,10 @@ Advanced usage
 
 The snippet above is fine, but you'll get better results by estimating how much real estate your images will need at specific screen sizes.
 
-Assuming you have a typical responsive product grid which changes its layout depending on the browser size:
+For example, let's assume your Shopify theme displays a typical responsive product grid which changes its layout depending on the browser size:
 
 | Screen size | Grid columns | % of browser width |
-|--------|--------------|--------------------|
+|--------|--------------:|--------------------:|
 |Mobile (<= 480px)|1|100%|
 |Tablet (> 480px and <= 768px)|2|50%|
 |Desktop (> 768px)|4|25%|
@@ -44,6 +44,16 @@ You would give the `sizes` option this list of media queries (`vw` stands for vi
 
 More about `srcset` and `sizes`:
   - https://dev.opera.com/articles/native-responsive-images/
+
+Options
+---
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `sizes` | Media queries describing how large the image  will be at various screen sizes. | `'100vw'` |
+| `image` | Product image to display | `product.featured_image`
+| `default_size` | [Shopify image size](https://docs.shopify.com/themes/liquid-documentation/filters/url-filters#size-parameters) to load as default `<img>` src | `'medium'` |
+| `attributes` | String of additional HTML attributes for the `<img>` tag | `''` |
 
 FAQ
 ---
