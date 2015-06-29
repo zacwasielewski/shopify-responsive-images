@@ -26,7 +26,7 @@ Options:
 
   sizes         - Media queries describing how large the image will be at various screen sizes.
                   REQUIRED
-                  Default: '50vw' (the image will always occupy 50% of the viewport width)
+                  Default: '100vw' (the image will always occupy 100% of the viewport width)
 
   image         - Product image to display
                   OPTIONAL
@@ -47,7 +47,7 @@ More information about srcset and sizes:
 {% endcomment %}
 
 {% assign default_default_size = "medium" %}
-{% assign default_sizes = "50vw" %}
+{% assign default_sizes = "100vw" %}
 {% assign default_image = product.featured_image %}
 
 {% if default_size == nil %}{% assign default_size = default_default_size %}{% endif %}
