@@ -66,7 +66,7 @@ FAQ
 
 - **Why should I use responsive images?**
 
-  Your site will load faster. With responsive images, the user's web browser chooses to download the most appropriate image size for the device and layout. http://alistapart.com/article/responsive-images-in-practice
+  Your site will load faster. With responsive images, the user's web browser chooses to download the most appropriate image size for the device and layout.
 
 - **What's up with that chunk of Javascript?**
 
@@ -75,3 +75,11 @@ FAQ
 - **Will this work in all browsers?**
 
   Yes. However, [native `srcset` support](http://caniuse.com/#feat=srcset) is relatively new, so if you need to support older browsers, then also include the [Picturefill](http://scottjehl.github.io/picturefill/) library.
+
+Reponsive image resources
+---
+
+- http://alistapart.com/article/responsive-images-in-practice
+- http://ericportis.com/posts/2014/srcset-sizes/
+- http://martinwolf.org/2014/05/07/the-new-srcset-and-sizes-explained/
+- http://dev.opera.com/articles/native-responsive-images/

@@ -1,49 +1,5 @@
 {% comment %}
-Shopify responsive product images with srcset.
-
-Example:
-
-  Include this snippet on a product page or within a products loop:
-
-  {% include 'product-image-srcset',
-    sizes: '(max-width: 640px) 50vw, (min-width: 641px) and (max-width: 960px) 33vw, 25vw' %}
-
-  Output:
-
-    <img src="//cdn.shopify.com/.../products/IMG_medium.jpg"
-      srcset="
-        //cdn.shopify.com/.../products/IMG_small.jpg     100w,
-        //cdn.shopify.com/.../products/IMG_compact.jpg   160w,
-        //cdn.shopify.com/.../products/IMG_medium.jpg    240w,
-        //cdn.shopify.com/.../products/IMG_large.jpg     480w,
-        //cdn.shopify.com/.../products/IMG_grande.jpg    600w,
-        //cdn.shopify.com/.../products/IMG_1024x1024.jpg 1024w"
-      sizes="(max-width: 640px) 50vw, (min-width: 641px) and (max-width: 960px) 33vw, 25vw"
-      alt="Product title"
-    />
-
-Options:
-
-  sizes         - Media queries describing how large the image will be at various screen sizes.
-                  REQUIRED
-                  Default: '100vw' (the image will always occupy 100% of the viewport width)
-
-  image         - Product image to display
-                  OPTIONAL
-                  Default: product.featured_image
-
-  default_size  - Shopify image size to load as default <img> src
-                  OPTIONAL
-                  Default: 'medium'
-
-  attributes    - String of additional HTML attributes for the <img> tag
-                  OPTIONAL
-                  Default: ""
-
-More information about srcset and sizes:
-- https://ericportis.com/posts/2014/srcset-sizes/
-- http://martinwolf.org/2014/05/07/the-new-srcset-and-sizes-explained/
-
+Responsive product images with srcset.
 {% endcomment %}
 
 {% assign default_default_size = "medium" %}
