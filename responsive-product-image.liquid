@@ -10,57 +10,6 @@ Responsive product images with srcset.
 {% if sizes == nil %}{% assign sizes = default_sizes %}{% endif %}
 {% if image == nil %}{% assign image = default_image %}{% endif %}
 
-{% comment %}
-srcset needs to know the width of each image to work accurately, but Shopify
-only tell us the length of its longest side. So we need to run this bit of
-Javascript on each image to determine its width and update the srcset attribute.
-{% endcomment %}
-<script>
-  if (typeof Shopify === 'undefined') { Shopify = {}; }
-  if (typeof Shopify.scaleSrcset === 'undefined') {
-    Shopify.scaleSrcset = function(img) {
-      var srcset,
-          srcset_orig,
-          srcset_json,
-          scale = img.naturalWidth / img.naturalHeight,
-          is_portrait = (scale < 1);
-
-      if (!is_portrait) { return; }
-      if (img.getAttribute('data-srcset-scaled')) { return; }
-
-      // parse the original srcset attribute into a JSON object
-      srcset_orig = img.getAttribute('srcset') || (img.picturefill || {}).srcset;
-      srcset_json = srcset_orig.split(',').map(function(rule){
-        return rule.trim().split(/\s+/).map(function(s) { return s.trim(); });
-      });
-
-      // scale srcset sizes and convert back to a string
-      srcset = srcset_json.map(function(rule) {
-        var url = rule[0],
-            width = parseInt(rule[1].slice(0,-1));
-        if (width > 160) { width = Math.floor(width * scale); } // don't scale square thumbnails
-        return [url, width.toString()+"w"].join(" ");
-      }).join(',');
-
-      img.setAttribute('srcset', srcset);
-      img.setAttribute('data-srcset-scaled', true); // prevent rescaling if <img> load event is triggered again
-      Shopify.triggerPictureFill(img);
-    }
-  }
-  if (typeof Shopify.triggerPictureFill === 'undefined') {
-    Shopify.triggerPictureFill = function(img) {
-      if (typeof picturefill === 'undefined') { return; }
-      if (img) {
-        picturefill({ reevaluate: true, elements: [img] });
-      } else {
-        picturefill({ reevaluate: true });
-      }
-    }
-    $(window).load(function(){
-      Shopify.triggerPictureFill();
-    });
-  }
-</script>
 <img src="{{ image.src | product_img_url: default_size }}"
   srcset="
     {{ image.src | product_img_url: 'small' }}     100w,
@@ -71,6 +20,6 @@ Javascript on each image to determine its width and update the srcset attribute.
     {{ image.src | product_img_url: '1024x1024' }} 1024w"
   sizes="{{ sizes }}"
   alt="{{ image.alt | escape }}"
-  onload="Shopify.scaleSrcset(this)"
+  data-js-scale-srcset="true"
   {% if attributes != nil %}{{ attributes }}{% endif %}
 />
