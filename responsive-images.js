@@ -1,10 +1,16 @@
 var ShopifyResponsiveImages = (function( window, undefined ) {
 
+  var sizes = {
+    "small": 100,
+    "compact": 160,
+    "medium": 240,
+    "large": 480,
+    "grande": 600,
+    "1024x1024": 1024
+  };
+
   function load() {
     ready(init);
-    window.addEventListener('load', function() {
-      triggerPictureFill();
-    }, false);
   }
 
   function init() {
@@ -14,17 +20,21 @@ var ShopifyResponsiveImages = (function( window, undefined ) {
         scaleSrcset(this);
       }, false);
     });
+    window.addEventListener('load', function() {
+      triggerPictureFill();
+    }, false);
   }
 
   function scaleSrcset(img) {
     var srcset,
         srcset_orig,
         srcset_json,
-        scale = img.naturalWidth / img.naturalHeight,
-        is_portrait = (scale < 1);
+        ratio = img.naturalWidth / img.naturalHeight,
+        scale = getImageScale(img),
+        is_portrait = (ratio < 1);
 
     if (!is_portrait) { return; }
-    if (!img.getAttribute('data-js-scale-srcset')) { return; }
+    if (img.getAttribute('data-js-scale-srcset') != "true") { return; }
 
     // parse the original srcset attribute into a JSON object
     srcset_orig = img.getAttribute('srcset') || (img.picturefill || {}).srcset;
@@ -49,8 +59,22 @@ var ShopifyResponsiveImages = (function( window, undefined ) {
     }
   }
 
-  function srcsetToJSON() {
-    return srcset_orig.split(',').map(function(rule){
+  function getImageScale(img) {
+
+    var longest_edge = Math.max(img.naturalWidth, img.naturalHeight);
+    for (var key in sizes) {
+      var size = sizes[key];
+      if (img.src.indexOf( "_" +key+ "." )) {
+        if (size > longest_edge) {
+          return longest_edge / size;
+        }
+      }
+    }
+    return 1;
+  }
+
+  function srcsetToJSON(srcset) {
+    return srcset.split(',').map(function(rule){
       return rule.trim().split(/\s+/).map(function(s) { return s.trim(); });
     });
   }
