@@ -6,11 +6,17 @@ Use this Liquid snippet in your Shopify theme to make product images responsive.
 Quick start
 ---
 
-Copy `responsive-product-image.liquid` to your theme's `snippets` folder and include it wherever you would normally include a product image:
+1. Copy `responsive-product-image.liquid` to your theme's `snippets/` folder and include it wherever you would normally include a product image:
 
-```ruby
-{% include 'responsive-product-image' %}
-```
+  ```ruby
+  {% include 'responsive-product-image' %}
+  ```
+
+2.  Copy `responsive-images.js` to `assets/` and include it with your other scripts (usually at the bottom of `theme.liquid`):
+
+  ```ruby
+  {{ 'responsive-images.js' | asset_url | script_tag }}
+  ```
 
 That will output:
 
