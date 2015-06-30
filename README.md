@@ -8,7 +8,7 @@ Quick start
 
 Copy `responsive-product-image.liquid` to your theme's `snippets` folder and include it wherever you would normally include a product image:
 
-```liquid
+```ruby
 {% include 'product-image-srcset' %}
 ```
 
@@ -33,7 +33,7 @@ Advanced usage
 
 The snippet above is fine, but you'll get better results by estimating how much real estate your images will need at specific screen sizes.
 
-For example, let's assume your Shopify theme displays a typical responsive product grid which changes its layout depending on the browser size:
+For example, let's assume your Shopify theme displays a typical responsive product grid which changes layout depending on the browser size:
 
 | Screen size | Grid columns | % of browser width |
 |--------|--------------:|--------------------:|
@@ -43,7 +43,7 @@ For example, let's assume your Shopify theme displays a typical responsive produ
 
 You would give the `sizes` option this list of media queries (`vw` stands for viewport width):
 
-```liquid
+```ruby
 {% include 'product-image-srcset',
   sizes: '(max-width: 480px) 100vw, (min-width: 481px) and (max-width: 768px) 50vw, 25vw'%}
 ```
@@ -66,11 +66,11 @@ FAQ
 
 - **Why should I use responsive images?**
 
-  Your site will load faster. The user's web browser chooses the most appropriate image size for the device, so users on small screens don't waste time downloading high-resolution images for desktops. http://alistapart.com/article/responsive-images-in-practice
+  Your site will load faster. With responsive images, the user's web browser chooses to download the most appropriate image size for the device and layout. http://alistapart.com/article/responsive-images-in-practice
 
 - **What's up with that chunk of Javascript?**
 
-  Shopify doesn't tell us the width of an image, only the length of the image's *longest side*. But `srcset` needs to know an image's width to work accurately. So as a workaround, that bit of Javascript analyzes the image as soon as it loads, determine its actual width, and updates the srcset attribute.
+  Shopify unfortunately doesn't tell us the width of an image, only the length of its *longest side*. But `srcset` must know an image's width to work accurately. So as a workaround, that bit of Javascript analyzes the image as soon as it loads, determine its actual width, and updates the srcset attribute.
 
 TODO
 ---
