@@ -9,7 +9,7 @@ Quick start
 Copy `responsive-product-image.liquid` to your theme's `snippets` folder and include it wherever you would normally include a product image:
 
 ```ruby
-{% include 'product-image-srcset' %}
+{% include 'responsive-product-image' %}
 ```
 
 That will output:
@@ -70,7 +70,8 @@ FAQ
 
 - **What's up with that chunk of Javascript?**
 
-  Shopify unfortunately doesn't tell us the width of an image, only the length of its *longest side*. But `srcset` must know an image's width to work accurately. So as a workaround, that bit of Javascript analyzes the image as soon as it loads, determine its actual width, and updates the srcset attribute.
+  It's a necessary hack. Shopify unfortunately doesn't tell us the width of an image, only the length of its *longest side*. But `srcset` *must* know an image's width to work accurately. So as a workaround, that bit of Javascript analyzes the image as soon as it loads, determine its actual width, and updates the srcset attribute.
 
-TODO
----
+- **Will this work in all browsers?**
+
+  Yes. However, [native `srcset` support](http://caniuse.com/#feat=srcset) is relatively new, so if you need to support older browsers, then also include the [Picturefill](http://scottjehl.github.io/picturefill/) library.
