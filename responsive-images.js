@@ -1,14 +1,5 @@
 var ShopifyResponsiveImages = (function( window, undefined ) {
 
-  var sizes = {
-    "small": 100,
-    "compact": 160,
-    "medium": 240,
-    "large": 480,
-    "grande": 600,
-    "1024x1024": 1024
-  };
-
   function load() {
     ready(init);
   }
@@ -30,7 +21,7 @@ var ShopifyResponsiveImages = (function( window, undefined ) {
         srcset_orig,
         srcset_json,
         ratio = img.naturalWidth / img.naturalHeight,
-        scale = getImageScale(img),
+        scale = ratio,
         is_portrait = (ratio < 1);
 
     if (!is_portrait) { return; }
@@ -57,20 +48,6 @@ var ShopifyResponsiveImages = (function( window, undefined ) {
     } else {
       picturefill({ reevaluate: true });
     }
-  }
-
-  function getImageScale(img) {
-
-    var longest_edge = Math.max(img.naturalWidth, img.naturalHeight);
-    for (var key in sizes) {
-      var size = sizes[key];
-      if (img.src.indexOf( "_" +key+ "." )) {
-        if (size > longest_edge) {
-          return longest_edge / size;
-        }
-      }
-    }
-    return 1;
   }
 
   function srcsetToJSON(srcset) {
