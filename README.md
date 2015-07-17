@@ -1,7 +1,7 @@
-Responsive Shopify images with `srcset` and `sizes`
+Responsive Shopify product images
 ===
 
-Use this Liquid snippet in your Shopify theme to make product images responsive.
+Use this `.liquid` snippet in your Shopify theme to generate responsive product images.
 
 Quick start
 ---
@@ -37,9 +37,9 @@ That will output:
 Advanced usage
 ---
 
-The snippet above is fine, but you'll get better results by estimating how much real estate your images will need at specific screen sizes.
+The snippet above is fine, but you'll get better results by estimating how much real estate your images will occupy at specific screen sizes.
 
-For example, let's assume your Shopify theme displays a typical responsive product grid which changes layout depending on the browser size:
+For example, let's assume your theme has a typical responsive product grid layout that changes depending on the browser size:
 
 | Screen size | Grid columns | % of browser width |
 |--------|--------------:|--------------------:|
@@ -50,7 +50,7 @@ For example, let's assume your Shopify theme displays a typical responsive produ
 You would give the `sizes` option this list of media queries (`vw` stands for viewport width):
 
 ```ruby
-{% include 'product-image-srcset',
+{% include 'responsive-product-image',
   sizes: '(max-width: 480px) 100vw, (min-width: 481px) and (max-width: 768px) 50vw, 25vw'%}
 ```
 
