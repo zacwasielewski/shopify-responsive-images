@@ -1,0 +1,34 @@
+{% comment %}
+  Shopify Responsive Images Example
+  https://github.com/zacwasielewski/shopify-responsive-images
+
+  Grid classes and breakpoints were sustainably harvested from
+  the Timber framework (https://github.com/Shopify/Timber)
+{% endcomment %}
+
+<header>
+  <h1>{{ collection.title }}</h1>
+</header>
+
+<div class="grid-uniform">
+
+  {% for product in collection.products %}
+
+    <div class="grid__item small--one-half medium--one-third large--one-quarter">
+      <a href="{{ product.url }}">
+
+        {% include 'responsive-product-image',
+           sizes: '(max-width: 640px) 50vw, (min-width: 641px) and (max-width: 960px) 33vw, 25vw' %}
+
+      </a>
+      <div><a href="{{ product.url }}">{{ product.title }}</a></div>
+      <div>{{ product.price | money }}</div>
+    </div>
+
+  {% else %}
+
+    <p>There are no products in this collection.</p>
+
+  {% endfor %}
+
+</div>
