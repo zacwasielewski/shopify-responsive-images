@@ -5,30 +5,55 @@
   Grid classes and breakpoints were sustainably harvested from
   the Timber framework (https://github.com/Shopify/Timber)
 {% endcomment %}
+<html>
+<head>
+  <title>Shopify Responsive Images Example</title>
 
-<header>
-  <h1>{{ collection.title }}</h1>
-</header>
+  {% comment %}
+    Step 1: Include Picturefill
+  {% endcomment %}
+  <script>
+    document.createElement( "picture" );
+  </script>
+  <script src="{{ 'picturefill.js' | asset_url | script_tag }}" async></script>
 
-<div class="grid-uniform">
+</head>
+<body>
 
-  {% for product in collection.products %}
+  <header>
+    <h1>{{ collection.title }}</h1>
+  </header>
 
-    <div class="grid__item small--one-half medium--one-third large--one-quarter">
-      <a href="{{ product.url }}">
+  <div class="grid-uniform">
 
-        {% include 'responsive-product-image',
-           sizes: '(max-width: 640px) 50vw, (min-width: 641px) and (max-width: 960px) 33vw, 25vw' %}
+    {% for product in collection.products %}
 
-      </a>
-      <div><a href="{{ product.url }}">{{ product.title }}</a></div>
-      <div>{{ product.price | money }}</div>
-    </div>
+      <div class="grid__item small--one-half medium--one-third large--one-quarter">
+        <a href="{{ product.url }}">
 
-  {% else %}
+          {% comment %}
+            Step 3: Include responsive-product-image snippet
+          {% endcomment %}
+          {% include 'responsive-product-image',
+             sizes: '(max-width: 640px) 50vw, (min-width: 641px) and (max-width: 960px) 33vw, 25vw' %}
 
-    <p>There are no products in this collection.</p>
+        </a>
+        <div><a href="{{ product.url }}">{{ product.title }}</a></div>
+        <div>{{ product.price | money }}</div>
+      </div>
 
-  {% endfor %}
+    {% else %}
 
-</div>
+      <p>There are no products in this collection.</p>
+
+    {% endfor %}
+
+  </div>
+
+  {% comment %}
+    Step 2: Include responsive-images.js
+  {% endcomment %}
+  {{ 'responsive-images.js' | asset_url | script_tag }}
+
+</body>
+</html>
