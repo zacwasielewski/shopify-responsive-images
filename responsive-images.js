@@ -1,31 +1,41 @@
 var ShopifyResponsiveImages = (function( window, undefined ) {
 
+  var sizes = {
+    "small":      100,
+    "compact":    160,
+    "medium":     240,
+    "large":      480,
+    "grande":     600,
+    "1024x1024":  1024
+  };
+
   function load() {
     ready(init);
   }
 
   function init() {
-    var images = document.querySelectorAll('img[data-js-scale-srcset]');
+    var images = document.querySelectorAll('img[data-js-responsive]');
     forEach(images, function(index, img) {
       img.addEventListener('load', function() {
-        scaleSrcset(this);
+        var scaledImage = scaleImgSrcset(this);
+        //triggerPictureFill(scaledImage);
       }, false);
     });
     window.addEventListener('load', function() {
-      triggerPictureFill();
+      //triggerPictureFill();
     }, false);
   }
 
-  function scaleSrcset(img) {
+  function scaleImgSrcset(img) {
     var srcset,
         srcset_orig,
         srcset_json,
         ratio = img.naturalWidth / img.naturalHeight,
-        scale = ratio,
+        scale = getImageScale(img),
         is_portrait = (ratio < 1);
 
     if (!is_portrait) { return; }
-    if (img.getAttribute('data-js-scale-srcset') != "true") { return; }
+    if (img.getAttribute('data-js-srcset-scaled') === 'true') { return; }
 
     // parse the original srcset attribute into a JSON object
     srcset_orig = img.getAttribute('srcset') || (img.picturefill || {}).srcset;
@@ -37,8 +47,9 @@ var ShopifyResponsiveImages = (function( window, undefined ) {
     }).join(',');
 
     img.setAttribute('srcset', srcset);
-    img.setAttribute('data-js-scale-srcset', false); // prevent rescaling if <img> load event is triggered again
-    triggerPictureFill(img);
+    img.setAttribute('data-js-srcset-scaled', 'true'); // prevent rescaling if <img> load event is triggered again
+
+    return img;
   }
 
   function triggerPictureFill(img) {
@@ -48,6 +59,20 @@ var ShopifyResponsiveImages = (function( window, undefined ) {
     } else {
       picturefill({ reevaluate: true });
     }
+  }
+
+  function getImageScale(img) {
+
+    var longest_edge = Math.max(img.naturalWidth, img.naturalHeight);
+    for (var key in sizes) {
+      var size = sizes[key];
+      if (img.src.indexOf( "_" +key+ "." )) {
+        if (size > longest_edge) {
+          return longest_edge / size;
+        }
+      }
+    }
+    return 1;
   }
 
   function srcsetToJSON(srcset) {

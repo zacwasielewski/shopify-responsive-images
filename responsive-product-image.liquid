@@ -20,6 +20,6 @@ Responsive product images with srcset.
     {{ image.src | product_img_url: '1024x1024' }} 1024w"
   sizes="{{ sizes }}"
   alt="{{ image.alt | escape }}"
-  data-js-scale-srcset="true"
+  data-js-responsive="true"
   {% if attributes != nil %}{{ attributes }}{% endif %}
 />
