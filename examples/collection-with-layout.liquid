@@ -12,10 +12,7 @@
   {% comment %}
     Step 1: Include Picturefill
   {% endcomment %}
-  <script>
-    document.createElement( "picture" );
-  </script>
-  <script src="{{ 'picturefill.js' | asset_url | script_tag }}" async></script>
+  <script src="{{ 'picturefill.js' | asset_url | script_tag }}"></script>
 
 </head>
 <body>
