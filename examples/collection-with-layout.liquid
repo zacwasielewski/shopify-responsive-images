@@ -32,6 +32,7 @@
             Step 3: Include responsive-product-image snippet
           {% endcomment %}
           {% include 'responsive-product-image',
+             image: product.featured_image,
              sizes: '(max-width: 640px) 50vw, (min-width: 641px) and (max-width: 960px) 33vw, 25vw' %}
 
         </a>

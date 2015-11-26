@@ -6,10 +6,11 @@ Use this `.liquid` snippet in your Shopify theme to generate responsive product 
 Quick start
 ---
 
-1. Copy `responsive-product-image.liquid` to your theme's `snippets/` folder and include it wherever you would normally include a product image:
+1. Copy `responsive-product-image.liquid` to your theme's `snippets/` folder and include it wherever you would normally include a product image. You *must* include the `image` parameter, specifying which product image to use:
 
   ```ruby
-  {% include 'responsive-product-image' %}
+  {% include 'responsive-product-image',
+        image: product.featured_image %}
   ```
 
 2.  Copy `responsive-images.js` to `assets/` and include it with your other scripts (usually at the bottom of `theme.liquid`):
@@ -51,7 +52,8 @@ You would give the `sizes` option this list of media queries (`vw` stands for vi
 
 ```ruby
 {% include 'responsive-product-image',
-  sizes: '(max-width: 480px) 100vw, (min-width: 481px) and (max-width: 768px) 50vw, 25vw'%}
+   image: product.featured_image,
+   sizes: '(max-width: 480px) 100vw, (min-width: 481px) and (max-width: 768px) 50vw, 25vw'%}
 ```
 
 More about `srcset` and `sizes`:
@@ -62,8 +64,8 @@ Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `sizes` | Media queries describing how large the image  will be at various screen sizes. | `'100vw'` |
 | `image` | Product image to display | `product.featured_image`
+| `sizes` | Media queries describing how large the image  will be at various screen sizes. | `'100vw'` |
 | `default_size` | [Shopify image size](https://docs.shopify.com/themes/liquid-documentation/filters/url-filters#size-parameters) to load as default `<img>` src | `'medium'` |
 | `attributes` | String of additional HTML attributes for the `<img>` tag | `''` |
 

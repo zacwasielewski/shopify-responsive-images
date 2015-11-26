@@ -4,11 +4,9 @@ Responsive product images with srcset.
 
 {% assign default_default_size = "medium" %}
 {% assign default_sizes = "100vw" %}
-{% assign default_image = product.featured_image %}
 
 {% if default_size == nil %}{% assign default_size = default_default_size %}{% endif %}
 {% if sizes == nil %}{% assign sizes = default_sizes %}{% endif %}
-{% if image == nil %}{% assign image = default_image %}{% endif %}
 
 <img src="{{ image.src | product_img_url: default_size }}"
   srcset="
