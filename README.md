@@ -64,7 +64,7 @@ Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `image` | Product image to display | `product.featured_image`
+| `image` | Product image to display | **None (required)**
 | `sizes` | Media queries describing how large the image  will be at various screen sizes. | `'100vw'` |
 | `default_size` | [Shopify image size](https://docs.shopify.com/themes/liquid-documentation/filters/url-filters#size-parameters) to load as default `<img>` src | `'medium'` |
 | `attributes` | String of additional HTML attributes for the `<img>` tag | `''` |
